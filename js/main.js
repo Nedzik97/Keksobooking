@@ -1,26 +1,20 @@
-function getRandomNumber(min, max) {
-  let getQuantity = Math.floor(Math.random() * (max - min + 1) + min);
-  if (min >= max) {
-    getQuantity = (Math.random() * (max - min + 1) + min);
-  }
-  return getQuantity;
+function getRandomInteger(min, max) {
+  const lower = Math.min(Math.abs(min), Math.abs(max));
+  const upper =  Math.max(Math.abs(min), Math.abs(max));
+  const getQuantity = (Math.random() * (upper - lower) + lower);
+  return Math.floor(getQuantity);
+}
+
+console.log(getRandomInteger(20, 50));
+
+
+function getRandomNumberFloatingPoint(minNumber, maxNumber, floatingPoint) {
+  const lower = Math.min(Math.abs(minNumber), Math.abs(maxNumber));
+  const upper = Math.max(Math.abs(minNumber), Math.abs(maxNumber));
+  const  getQuantityFloat = (Math.random() * (upper - lower) + lower);
+  return getQuantityFloat.toFixed(floatingPoint);
 }
 
 
-for (let i = 1; i <= 10; i++) {
-  getRandomNumber(0, 50);
-}
+console.log(getRandomNumberFloatingPoint(140, 100, 1));
 
-
-function getRandomNumberFloatingPoint(minNumber, maxNumber, numSimbolsAfterCom) {
-  let getQuantitySecond = (Math.random() * (maxNumber - minNumber + 1) + minNumber);
-  if (minNumber >= maxNumber) {
-    getQuantitySecond = Math.floor(Math.random() * (maxNumber - minNumber + 1) + minNumber);
-  }
-  return getQuantitySecond.toFixed(numSimbolsAfterCom);
-}
-
-
-for (let i = 1; i <= 10; i++) {
-  getRandomNumberFloatingPoint(140, 100, 4);
-}
