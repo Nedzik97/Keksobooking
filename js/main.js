@@ -109,5 +109,4 @@ const getHouseRental = () => ({
 
 const getHouseRentalCount =  Array.from({length: 10}, getHouseRental);
 
-console.log(getHouseRentalCount);
 
