@@ -13,10 +13,10 @@ function getRandomNumberFloatingPoint(minNumber, maxNumber, floatingPoint) {
   const upper = Math.max(Math.abs(minNumber), Math.abs(maxNumber));
   const  randomNumberFloat = (Math.random() * (upper - lower) + lower);
   const randomDigitFloat = randomNumberFloat.toFixed(floatingPoint);
-  return randomDigitFloat;
+  return parseFloat(randomDigitFloat);
 }
 
-getRandomNumberFloatingPoint(140, 100, 1);
+(getRandomNumberFloatingPoint(140, 100, 1));
 
 
 const houseTypes = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
