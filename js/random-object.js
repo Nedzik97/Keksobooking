@@ -1,6 +1,6 @@
 import {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength} from './util.js';
 
-const QUANTITYENTITY = 10;
+const QUANTITYENTITY = 1;
 const houseTypes = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const checkinTimes = ['12:00', '13:00', '14:00'];
 const checkoutTimes = ['12:00', '13:00', '14:00'];
@@ -65,12 +65,12 @@ const createRandomOffer = (location) => {
 
 
 const getHouseRental = () => {
-  const location = createRandomLocation();
+  const locationCoordinate = createRandomLocation();
 
   return {
     author: createRandomAuthor(),
-    offer: createRandomOffer(location),
-    location,
+    offer: createRandomOffer(locationCoordinate),
+    location: locationCoordinate
   };
 };
 
