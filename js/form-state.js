@@ -1,9 +1,6 @@
-const adForm = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-
-
 const addFormState = (elementFormAds, elementFormFilters) => {
-  elementFormAds.classList.add('ad-form--disabled');
+  const adForm = document.querySelector('.ad-form');
+  adForm.classList.add('ad-form--disabled');
   const adFormElements = elementFormAds.children;
   const arrayFormElements = Array.from(adFormElements);
   arrayFormElements.forEach((currentElement) => {
@@ -11,7 +8,8 @@ const addFormState = (elementFormAds, elementFormFilters) => {
   });
 
   elementFormFilters.classList.add('ad-form--disabled');
-  const formFilterElements = elementFormFilters.children;
+  const mapFilters = document.querySelector('.map__filters');
+  const formFilterElements = mapFilters.children;
   const arrayFormFilterElements = Array.from(formFilterElements);
   arrayFormFilterElements.forEach((currentElement) => {
     currentElement.setAttribute('disabled', true);
@@ -19,7 +17,6 @@ const addFormState = (elementFormAds, elementFormFilters) => {
 };
 
 
-export {adForm, mapFilters};
 export {addFormState};
 
 

@@ -65,12 +65,12 @@ const createRandomOffer = (location) => {
 
 
 const getHouseRental = () => {
-  const locationCoordinate = createRandomLocation();
+  const location = createRandomLocation();
 
   return {
     author: createRandomAuthor(),
-    offer: createRandomOffer(locationCoordinate),
-    location: locationCoordinate
+    offer: createRandomOffer(location),
+    location: location
   };
 };
 
