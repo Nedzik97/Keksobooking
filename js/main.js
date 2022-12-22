@@ -1,4 +1,6 @@
-import {addFormState} from './form-state.js';
-import {createCardAnnouncement} from './offer.js';
+import {addFormState} from './util.js';
+// import {createCardAnnouncement} from './card-offer.js';
 
+import {checksFormValidation} from './form-validation.js';
 
+checksFormValidation();
