@@ -32,25 +32,6 @@ const getRandomLength = (array) => {
   return randomArray;
 };
 
-const addFormState = () => {
-  const adForm = document.querySelector('.ad-form');
-  adForm.classList.add('ad-form--disabled');
-  const adFormElements = adForm.children;
-  const arrayFormElements = Array.from(adFormElements);
-  arrayFormElements.forEach((currentElement) => {
-    currentElement.setAttribute('disabled', true);
-  });
-
-  const mapFilters = document.querySelector('.map__filters');
-  mapFilters.classList.add('ad-form--disabled');
-  const formFilterElements = mapFilters.children;
-  const arrayFormFilterElements = Array.from(formFilterElements);
-  arrayFormFilterElements.forEach((currentElement) => {
-    currentElement.setAttribute('disabled', true);
-  });
-};
-
-
-export {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength, addFormState};
+export {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength,};
 
 

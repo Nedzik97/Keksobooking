@@ -77,4 +77,4 @@ const getHouseRental = () => {
 
 const getHouseRentalCount = () => Array.from({length: QUANTITYENTITY}, getHouseRental);
 
-export {getHouseRentalCount};
+export {getHouseRentalCount,createRandomLocation};
