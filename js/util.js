@@ -32,6 +32,15 @@ const getRandomLength = (array) => {
   return randomArray;
 };
 
-export {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength};
+
+const getZeroBeforeInt = (min, max) => {
+  const randomValue = getRandomInteger(min, max);
+  if (randomValue < 10) {
+    return `0${randomValue}`;
+  }
+  return randomValue;
+};
+
+export {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength, getZeroBeforeInt};
 
 
