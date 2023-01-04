@@ -1,7 +1,7 @@
 import {enableForm} from './form-state.js';
-import {getHouseRentalCount} from './random-object.js';
 import {createAnnouncementCard} from './card-offer.js';
-const randomData = getHouseRentalCount();
+import {getData} from './data.js';
+
 
 const BASIC_LAT = 35.68948;
 const BASIC_LNG = 139.69170;
@@ -12,11 +12,12 @@ const INITIAL_MAP_LAT = 59.92749;
 const INITIAL_MAP_LNG = 30.31127;
 const adress = document.querySelector('#address');
 
+const map = L.map('map-canvas');
+
 const addMapToPage = () => {
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      enableForm();
-    })
+  map.on('load', () => {
+    enableForm();
+  })
     .setView({
       lat: INITIAL_MAP_LAT,
       lng: INITIAL_MAP_LNG,
@@ -35,11 +36,6 @@ const addMapToPage = () => {
     iconAnchor: [MAIN_PIN_SIZE/2, MAIN_PIN_SIZE],
   });
 
-  const adPin = L.icon({
-    iconUrl: 'img/pin.svg',
-    iconSize: [AD_PIN_SIZE, AD_PIN_SIZE],
-    iconAnchor: [AD_PIN_SIZE/2, AD_PIN_SIZE],
-  });
 
 
   const mainPinMarker = L.marker(
@@ -54,32 +50,43 @@ const addMapToPage = () => {
   );
   mainPinMarker.addTo(map);
 
-  mainPinMarker.on('moveend', (evt) => {
-    // console.log(evt.target.getLatLng());
-  });
-
   const markerGroup = L.layerGroup().addTo(map);
 
 
-  const createMarker = (point) => {
-    const {location} = point;
-    const adMarker = L.marker(
-      {
-        lat: location.lat,
-        lng: location.lng,
-      },
-      {
-        icon: adPin,
-      },
-    );
-    adMarker
-      .addTo(markerGroup)
-      .bindPopup(createAnnouncementCard(randomData));
+  const createMarkers = () => {
+    getData().then((element) => {
+      element.forEach((card) => {
+        const adPinIcon = L.icon({
+          iconUrl: 'img/pin.svg',
+          iconSize: [AD_PIN_SIZE, AD_PIN_SIZE],
+          iconAnchor: [AD_PIN_SIZE/2, AD_PIN_SIZE],
+        });
+        const marker = L.marker(
+          {
+            lat: card.location.lat,
+            lng: card.location.lng,
+          },
+          {
+            icon: adPinIcon,
+          },
+        );
+
+        marker
+          .addTo(markerGroup)
+          .addTo(map)
+          .bindPopup(
+            // console.log(card);
+            createAnnouncementCard(card),
+            {
+              keepInView: true,
+            }
+          );
+      });
+    });
   };
 
-  randomData.forEach((point) => {
-    createMarker(point);
-  });
+  createMarkers();
+
 
   // временно вызвана функция
 
@@ -107,7 +114,6 @@ const addMapToPage = () => {
     const coordinates = evt.target.getLatLng();
     adress.value = `${coordinates.lat.toFixed(DECIMAL_PLACE)}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
   });
-
 };
 
 export {addMapToPage};

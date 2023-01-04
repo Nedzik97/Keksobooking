@@ -4,3 +4,4 @@ import {addMapToPage} from './map.js';
 checksFormValidation();
 createSliderPrice();
 addMapToPage();
+
