@@ -1,6 +1,13 @@
-import {getRandomInteger, getRandomNumberFloatingPoint, getRandomLength} from './util.js';
+import {
+  getRandomInteger,
+  getRandomNumberFloatingPoint,
+  getRandomLength,
+  getZeroBeforeInt
+} from './util.js';
 
-const QUANTITYENTITY = 1;
+const MIN_COUNT_AUTHOR = 0;
+const MAX_COUNT_AUTHOR = 10;
+const OBJECTS_COUNT = 1;
 const houseTypes = ['palace', 'flat', 'house', 'bungalow', 'hotel'];
 const checkinTimes = ['12:00', '13:00', '14:00'];
 const checkoutTimes = ['12:00', '13:00', '14:00'];
@@ -10,7 +17,7 @@ const photos = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg.'
 ];
-const photoIndexes = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10'];
+
 
 const headlines = [
   'Любите захватывающий вид? Райский шалаш для молодоженов. Исключительный случай – дом в нашем районе со скидкой!',
@@ -31,7 +38,7 @@ const houseDescriptions = [
 
 const createRandomAuthor = () => {
   const author = {
-    avatar: `img/avatars/user${photoIndexes.shift()}.png`
+    avatar: `img/avatars/user${getZeroBeforeInt(MIN_COUNT_AUTHOR, MAX_COUNT_AUTHOR)}.png`,
   };
   return author;
 };
@@ -75,6 +82,6 @@ const getHouseRental = () => {
 };
 
 
-const getHouseRentalCount = () => Array.from({length: QUANTITYENTITY}, getHouseRental);
+const getHouseRentalCount = () => Array.from({length: OBJECTS_COUNT}, getHouseRental);
 
 export {getHouseRentalCount,createRandomLocation};

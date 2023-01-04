@@ -1,6 +1,6 @@
-import {activeForm} from './form-state.js';
+import {enableForm} from './form-state.js';
 import {getHouseRentalCount} from './random-object.js';
-import {createCardAnnouncement} from './card-offer.js';
+import {createAnnouncementCard} from './card-offer.js';
 const randomData = getHouseRentalCount();
 
 const BASIC_LAT = 35.68948;
@@ -8,17 +8,18 @@ const BASIC_LNG = 139.69170;
 const MAIN_PIN_SIZE = 52;
 const AD_PIN_SIZE = 40;
 const DECIMAL_PLACE = 5;
-
+const INITIAL_MAP_LAT = 59.92749;
+const INITIAL_MAP_LNG = 30.31127;
 const adress = document.querySelector('#address');
 
 const addMapToPage = () => {
   const map = L.map('map-canvas')
     .on('load', () => {
-      activeForm();
+      enableForm();
     })
     .setView({
-      lat: 59.92749,
-      lng: 30.31127,
+      lat: INITIAL_MAP_LAT,
+      lng: INITIAL_MAP_LNG,
     }, 10);
 
   L.tileLayer(
@@ -73,7 +74,7 @@ const addMapToPage = () => {
     );
     adMarker
       .addTo(markerGroup)
-      .bindPopup(createCardAnnouncement(randomData));
+      .bindPopup(createAnnouncementCard(randomData));
   };
 
   randomData.forEach((point) => {

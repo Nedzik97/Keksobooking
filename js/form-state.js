@@ -4,7 +4,6 @@ const mapFilters = document.querySelector('.map__filters');
 const selectsMapFilters = mapFilters.querySelectorAll('select');
 const fieldsetMapFilters = mapFilters.querySelectorAll('fieldset');
 
-//Неактивное состояние формы
 
 const disableElements = (elements) => {
   elements.forEach((element) => {
@@ -12,7 +11,7 @@ const disableElements = (elements) => {
   });
 };
 
-const nonActiveForm = () => {
+const disableForm = () => {
   adForm.classList.add('ad-form--disabled');
   mapFilters.classList.add('map__filters--disabled');
   disableElements(fieldsetAdForm);
@@ -20,9 +19,8 @@ const nonActiveForm = () => {
   disableElements(fieldsetMapFilters);
 };
 
-nonActiveForm();
+disableForm();
 
-//Активное состояние формы
 
 const enableElements = (elements) => {
   elements.forEach((element) => {
@@ -30,7 +28,7 @@ const enableElements = (elements) => {
   });
 };
 
-const activeForm = () => {
+const enableForm = () => {
   if (adForm.classList.contains('ad-form--disabled') && mapFilters.classList.contains('map__filters--disabled')) {
     adForm.classList.remove('ad-form--disabled');
     mapFilters.classList.remove('map__filters--disabled');
@@ -41,4 +39,4 @@ const activeForm = () => {
 };
 
 
-export {nonActiveForm, activeForm};
+export {disableForm, enableForm};
