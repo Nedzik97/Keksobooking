@@ -8,15 +8,16 @@ const HOUSE_TYPE_MAP = {
 
 
 const addFeatureElements = (features, featuresAnnouncement) => {
-  if (!features) {
-    featuresAnnouncement.remove();
+  if (features) {
+    featuresAnnouncement.forEach((featureListItem) => {
+      const isNecessary = features.some(
+        (feature) => featureListItem.classList.contains(`popup__feature--${feature}`)
+      );
+      if(!isNecessary){
+        featureListItem.remove();
+      }
+    });
   }
-  featuresAnnouncement.forEach((featureListItem) => {
-    const isNeedFeatures = features.some((featuresItem) => featureListItem.classList.contains(`popup__feature--${featuresItem}`));
-    if (!isNeedFeatures) {
-      featureListItem.remove();
-    }
-  });
 };
 
 const addPhotoElements = (photos, containerPhotos, photoItem) => {
@@ -50,17 +51,7 @@ const setSrc = (data, element) => {
 };
 
 const addTextContentCapacity = (rooms, guests, element) => {
-  if (rooms <= 1) {
-    element.textContent = `${rooms} комната для ${guests} гостей`;
-  } else if (rooms < 5) {
-    element.textContent = `${rooms} комнаты для ${guests} гостей`;
-  } else if (rooms >= 5) {
-    element.textContent = `${rooms} комнат для ${guests} гостей`;
-  } else if (guests <= 1) {
-    element.textContent = `${rooms} комнаты для ${guests} гостя`;
-  } else {
-    element.remove();
-  }
+  element.textContent = `${rooms} ${rooms === 1 ? 'комната' : 'комнаты'} для ${guests} ${guests === 1 ? 'гость' : 'гостей'}`;
 };
 
 
@@ -76,12 +67,12 @@ const createAnnouncementCard = (data) => {
   addTextContent(HOUSE_TYPE_MAP[data.offer.type], cardElement.querySelector('.popup__type'));
   addTextContentCapacity(data.offer.rooms, data.offer.guests, cardElement.querySelector('.popup__text--capacity'));
   addTextContent(`Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`, cardElement.querySelector('.popup__text--time'));
-  addFeatureElements(data.offer.features, cardElement.querySelectorAll('.popup__feature'));
+
+  addFeatureElements(data.offer.features, cardElement.querySelectorAll('.popup__features'));
+
   addTextContent(data.offer.description, cardElement.querySelector('.popup__description'));
   cardElement.querySelector('.popup__photos').appendChild(addPhotoElements(data.offer.photos, containerPhotos, photoItem));
   setSrc(data.author.avatar, cardElement.querySelector('.popup__avatar'));
-
 };
-
 
 export {createAnnouncementCard};

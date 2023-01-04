@@ -3,8 +3,6 @@ import {createAnnouncementCard} from './card-offer.js';
 import {getData} from './data.js';
 
 
-// const data = getData();
-
 const BASIC_LAT = 35.68948;
 const BASIC_LNG = 139.69170;
 const MAIN_PIN_SIZE = 52;
@@ -39,6 +37,7 @@ const addMapToPage = () => {
   });
 
 
+
   const mainPinMarker = L.marker(
     {
       lat: BASIC_LAT,
@@ -50,7 +49,6 @@ const addMapToPage = () => {
     },
   );
   mainPinMarker.addTo(map);
-
 
   const markerGroup = L.layerGroup().addTo(map);
 
@@ -76,15 +74,22 @@ const addMapToPage = () => {
         marker
           .addTo(markerGroup)
           .addTo(map)
-          .bindPopup(() => {
-            console.log(card)
-            createAnnouncementCard(card);
-          });
+          .bindPopup(
+            // console.log(card);
+            createAnnouncementCard(card),
+            {
+              keepInView: true,
+            }
+          );
       });
     });
   };
 
   createMarkers();
+
+
+  // временно вызвана функция
+
 
   const resetMap = () => map.setView({
     lat: BASIC_LAT,
@@ -109,8 +114,6 @@ const addMapToPage = () => {
     const coordinates = evt.target.getLatLng();
     adress.value = `${coordinates.lat.toFixed(DECIMAL_PLACE)}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
   });
-
-
 };
 
 export {addMapToPage};
