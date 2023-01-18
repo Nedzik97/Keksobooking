@@ -1,7 +1,11 @@
-import {createSliderPrice} from './price-slider.js';
-import {checksFormValidation} from './form-validation.js';
-import {addMapToPage} from './map.js';
+import './form.js';
+import './slider.js';
+import { setUserFromSubmit, checksFormValidation } from './form-validation.js';
+import { toggleForms, loadMap } from './map.js';
+import { showSuccessPopup, showErrorPopup } from './popup.js';
 checksFormValidation();
-createSliderPrice();
-addMapToPage();
+toggleForms(true);
+loadMap();
+
+setUserFromSubmit(showSuccessPopup, showErrorPopup);
 

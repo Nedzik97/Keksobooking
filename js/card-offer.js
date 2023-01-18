@@ -7,18 +7,23 @@ const HOUSE_TYPE_MAP = {
 };
 
 
-const addFeatureElements = (features, featuresAnnouncement) => {
-  if (features) {
-    featuresAnnouncement.forEach((featureListItem) => {
-      const isNecessary = features.some(
-        (feature) => featureListItem.classList.contains(`popup__feature--${feature}`)
-      );
-      if(!isNecessary){
-        featureListItem.remove();
-      }
-    });
+const addFeatureElements = (features, featuresContainer) => {
+  if (!features) {
+    featuresContainer.remove();
+    return;
   }
+
+  const featureElements = featuresContainer.querySelectorAll('.popup__feature');
+
+  featureElements.forEach((featuresListItem) => {
+    const isNecessary = features.some(
+      (feature) => featuresListItem.classList.contains(`popup__feature--${feature}`));
+    if (!isNecessary) {
+      featuresListItem.remove();
+    }
+  });
 };
+
 
 const addPhotoElements = (photos, containerPhotos, photoItem) => {
   const templateFragment = document.createDocumentFragment();
@@ -67,12 +72,13 @@ const createAnnouncementCard = (data) => {
   addTextContent(HOUSE_TYPE_MAP[data.offer.type], cardElement.querySelector('.popup__type'));
   addTextContentCapacity(data.offer.rooms, data.offer.guests, cardElement.querySelector('.popup__text--capacity'));
   addTextContent(`Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`, cardElement.querySelector('.popup__text--time'));
-
-  addFeatureElements(data.offer.features, cardElement.querySelectorAll('.popup__features'));
-
+  addFeatureElements(data.offer.features, cardElement.querySelector('.popup__features'));
   addTextContent(data.offer.description, cardElement.querySelector('.popup__description'));
   cardElement.querySelector('.popup__photos').appendChild(addPhotoElements(data.offer.photos, containerPhotos, photoItem));
   setSrc(data.author.avatar, cardElement.querySelector('.popup__avatar'));
+
+  return cardElement;
 };
+
 
 export {createAnnouncementCard};

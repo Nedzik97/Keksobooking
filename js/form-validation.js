@@ -1,4 +1,6 @@
-import {defaultSliderPrice} from './price-slider.js';
+import {defaultSliderPrice} from './slider.js';
+import { sendData } from './api.js';
+import { blockSubmitButton, unblockSubmitButton } from './form.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -112,4 +114,23 @@ const checksFormValidation = () => {
   timeOutField.addEventListener('input', syncTimeOutWithTimeIn);
 };
 
-export {checksFormValidation};
+const setUserFromSubmit = (onSuccess, onFail) => {
+  announcementForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    blockSubmitButton();
+    sendData(
+      () => {
+        onSuccess();
+        unblockSubmitButton();
+      },
+      () => {
+        onFail();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  }
+  );
+};
+
+export {checksFormValidation, announcementForm, setUserFromSubmit};
