@@ -1,4 +1,6 @@
-import {defaultSliderPrice} from './price-slider.js';
+import {resetDefaultSliderPrice} from './slider.js';
+import { sendData } from './api.js';
+import { blockSubmitButton, unblockSubmitButton } from './form.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -70,27 +72,27 @@ const setMinAmountHouseType = () => {
     case 'bungalow':
       priceHouseField.min = MIN_PRICE_BUNGALOW;
       priceHouseField.placeholder = MIN_PRICE_BUNGALOW;
-      defaultSliderPrice(0);
+      resetDefaultSliderPrice(0);
       break;
     case 'flat':
       priceHouseField.min = MIN_PRICE_FLAT;
       priceHouseField.placeholder = MIN_PRICE_FLAT;
-      defaultSliderPrice(1000);
+      resetDefaultSliderPrice(1000);
       break;
     case 'hotel':
       priceHouseField.min = MIN_PRICE_HOTEL;
       priceHouseField.placeholder = MIN_PRICE_HOTEL;
-      defaultSliderPrice(3000);
+      resetDefaultSliderPrice(3000);
       break;
     case 'house':
       priceHouseField.min = MIN_PRICE_HOUSE;
       priceHouseField.placeholder = MIN_PRICE_HOUSE;
-      defaultSliderPrice(5000);
+      resetDefaultSliderPrice(5000);
       break;
     case 'palace':
       priceHouseField.min = MIN_PRICE_PALACE;
       priceHouseField.placeholder = MIN_PRICE_PALACE;
-      defaultSliderPrice(10000);
+      resetDefaultSliderPrice(10000);
       break;
   }
 };
@@ -112,4 +114,23 @@ const checksFormValidation = () => {
   timeOutField.addEventListener('input', syncTimeOutWithTimeIn);
 };
 
-export {checksFormValidation};
+const setUserFromSubmit = (onSuccess, onFail) => {
+  announcementForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    blockSubmitButton();
+    sendData(
+      () => {
+        onSuccess();
+        unblockSubmitButton();
+      },
+      () => {
+        onFail();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  }
+  );
+};
+
+export {checksFormValidation, announcementForm, setUserFromSubmit};

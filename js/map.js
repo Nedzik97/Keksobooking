@@ -1,113 +1,133 @@
-import {enableForm} from './form-state.js';
-import {getHouseRentalCount} from './random-object.js';
-import {createAnnouncementCard} from './card-offer.js';
-const randomData = getHouseRentalCount();
+import { createAnnouncementCard } from './card-offer.js';
+import { mapFiltersForm, setMapFilters, filterOffers } from './filters.js';
+import { announcementForm } from './form-validation.js';
+import { getData, showError } from './api.js';
+import { throttle } from './throttle.js';
 
-const BASIC_LAT = 35.68948;
-const BASIC_LNG = 139.69170;
+
 const MAIN_PIN_SIZE = 52;
 const AD_PIN_SIZE = 40;
+const BASIC_LAT = 35.68948;
+const BASIC_LNG = 139.69170;
+const BASIC_MAP_SCALING = 11.5;
 const DECIMAL_PLACE = 5;
-const INITIAL_MAP_LAT = 59.92749;
-const INITIAL_MAP_LNG = 30.31127;
+const OFFERS_COUNT = 10;
+const map = L.map('map-canvas');
 const adress = document.querySelector('#address');
 
-const addMapToPage = () => {
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      enableForm();
-    })
-    .setView({
-      lat: INITIAL_MAP_LAT,
-      lng: INITIAL_MAP_LNG,
-    }, 10);
+const toggleClass = (element, className, value) => {
+  element.classList.toggle(className, value);
+};
 
-  L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+const toggleFormElements = (formElements, value) => {
+  formElements.forEach((element) => {element.disabled = value;});
+};
+
+const toggleAdForm = (value) => {
+  toggleClass(announcementForm, 'ad-form--disabled', value);
+  toggleFormElements(announcementForm.querySelectorAll('fieldset'), value);
+};
+
+const toggleFiltersForm = (value) => {
+  toggleClass(mapFiltersForm, 'map__filters--disabled', value);
+  toggleFormElements(mapFiltersForm.querySelectorAll('select, .map__features'), value);
+};
+
+const toggleForms = (value) => {
+  toggleAdForm(value);
+  toggleFiltersForm(value);
+};
+
+const mainPinMarker = L.icon({
+  iconUrl: '../img/main-pin.svg',
+  iconSize: [MAIN_PIN_SIZE, MAIN_PIN_SIZE],
+  iconAnchor: [MAIN_PIN_SIZE/2, MAIN_PIN_SIZE],
+});
+
+const adPin = L.icon({
+  iconUrl: '../img/pin.svg',
+  iconSize: [AD_PIN_SIZE, AD_PIN_SIZE],
+  iconAnchor: [AD_PIN_SIZE/2, AD_PIN_SIZE],
+});
+
+const marker = L.marker(
+  {
+    lat: BASIC_LAT,
+    lng: BASIC_LNG,
+  },
+  {
+    draggable: true,
+    icon: mainPinMarker,
+  },
+);
+
+const markerGroup = L.layerGroup().addTo(map);
+
+const createMarker = (point) => {
+  const {location} = point;
+  const adMarker = L.marker(
     {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      lat: location.lat,
+      lng: location.lng,
     },
-  ).addTo(map);
-
-  const mainPinIcon = L.icon({
-    iconUrl: 'img/main-pin.svg',
-    iconSize: [MAIN_PIN_SIZE, MAIN_PIN_SIZE],
-    iconAnchor: [MAIN_PIN_SIZE/2, MAIN_PIN_SIZE],
-  });
-
-  const adPin = L.icon({
-    iconUrl: 'img/pin.svg',
-    iconSize: [AD_PIN_SIZE, AD_PIN_SIZE],
-    iconAnchor: [AD_PIN_SIZE/2, AD_PIN_SIZE],
-  });
-
-
-  const mainPinMarker = L.marker(
     {
-      lat: BASIC_LAT,
-      lng: BASIC_LNG,
-    },
-    {
-      draggable: true,
-      icon: mainPinIcon,
+      icon: adPin,
     },
   );
-  mainPinMarker.addTo(map);
+  adMarker
+    .addTo(markerGroup)
+    .bindPopup(createAnnouncementCard(point));
+};
 
-  mainPinMarker.on('moveend', (evt) => {
-    // console.log(evt.target.getLatLng());
-  });
+const renderMarkers = (offers) => {
+  offers
+    .slice()
+    .slice(0, OFFERS_COUNT)
+    .forEach((point) => createMarker(point));
+};
 
-  const markerGroup = L.layerGroup().addTo(map);
+const loadMap = () => {
+  map.on('load', () => {
+    getData((offers) => {
+      setMapFilters(throttle(
+        () => renderMarkers(filterOffers(offers)), 5000)
+      );
+      renderMarkers(offers);
+      toggleForms(false);
+    }, () => showError('Не удалось получить данные. Попробуйте ещё раз'));
+  })
+    .setView({
+      lat: BASIC_LAT,
+      lng: BASIC_LNG,
+    }, BASIC_MAP_SCALING);
+};
 
+const resetMap = () => map.setView({
+  lat: BASIC_LAT,
+  lng: BASIC_LNG,
+});
 
-  const createMarker = (point) => {
-    const {location} = point;
-    const adMarker = L.marker(
-      {
-        lat: location.lat,
-        lng: location.lng,
-      },
-      {
-        icon: adPin,
-      },
-    );
-    adMarker
-      .addTo(markerGroup)
-      .bindPopup(createAnnouncementCard(randomData));
-  };
+L.tileLayer(
+  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+).addTo(map);
 
-  randomData.forEach((point) => {
-    createMarker(point);
-  });
-
-  // временно вызвана функция
-
-
-  const resetMap = () => map.setView({
+const resetMarker = () => {
+  marker.setLatLng({
     lat: BASIC_LAT,
     lng: BASIC_LNG,
   });
-  resetMap();
-  // временно вызвана функция
-
-  const resetMarker = () => {
-    mainPinMarker.setLatLng({
-      lat: BASIC_LAT,
-      lng: BASIC_LNG,
-    });
-  };
-  resetMarker();
-  // временно вызвына функция
-
-
-  adress.setAttribute('value', `${mainPinMarker._latlng.lat}, ${mainPinMarker._latlng.lng}`);
-
-  mainPinMarker.on('drag', (evt) => {
-    const coordinates = evt.target.getLatLng();
-    adress.value = `${coordinates.lat.toFixed(DECIMAL_PLACE)}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
-  });
-
 };
 
-export {addMapToPage};
+marker.addTo(map);
+
+adress.setAttribute('value', `${marker._latlng.lat}, ${marker._latlng.lng}`);
+
+marker.on('drag', (evt) => {
+  const coordinates = evt.target.getLatLng();
+  adress.value = `${coordinates.lat.toFixed(DECIMAL_PLACE)}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
+});
+
+export { loadMap, resetMap, announcementForm, resetMarker, markerGroup, renderMarkers, toggleForms, toggleFiltersForm };
