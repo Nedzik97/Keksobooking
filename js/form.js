@@ -66,7 +66,7 @@ const onPhotoImagesChange = (evt) => {
   }
 };
 
-const onResetButtonClick = () => {
+const resetForm = () => {
   announcementForm.reset();
   avatar.files.value = DEFAULT_AVATAR;
   avatarImg.src = DEFAULT_AVATAR;
@@ -88,7 +88,7 @@ const unblockSubmitButton = () => {
   submitButton.disabled = false;
 };
 
-resetBtn.addEventListener('click', onResetButtonClick);
+resetBtn.addEventListener('click', resetForm);
 
 type.addEventListener('change', () => {
   price.placeholder = TypePrice[type.value];
@@ -106,4 +106,4 @@ timeOut.addEventListener('change', () => {
 avatar.addEventListener('change', onAvatarImageChange, false);
 photos.addEventListener('change', onPhotoImagesChange, false);
 
-export { price, TypePrice, onResetButtonClick, blockSubmitButton, unblockSubmitButton };
+export { price, TypePrice, resetForm, blockSubmitButton, unblockSubmitButton };

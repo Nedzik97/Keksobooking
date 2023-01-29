@@ -5,20 +5,21 @@ const livingTypeInput = document.querySelector('#housing-type');
 const priceInput = document.querySelector('#housing-price');
 const roomsInput = document.querySelector('#housing-rooms');
 const guestsInput = document.querySelector('#housing-guests');
+
 const PricesByValues = {
-  'low': {
+  low: {
     min: 0,
     max: 10000
   },
-  'high': {
+  high: {
     min: 50000,
     max: 100000
   },
-  'middle': {
+  middle: {
     min: 10000,
     max: 50000
   },
-  'any': {
+  any: {
     min: 0,
     max: 100000
   },
@@ -42,9 +43,20 @@ const filterByLivingType = ({offer}) => {
 
 const filterByPrice = ({offer}) => offer.price >= PricesByValues[priceInput.value].min && offer.price <= PricesByValues[priceInput.value].max;
 
-const filterByRooms = ({offer}) => (roomsInput.value === 'any') ? offer : offer.rooms === Number(roomsInput.value);
+const filterByRooms = ({offer}) => {
+  if (roomsInput.value === 'any' || offer.rooms === Number(roomsInput.value)) {
+    return true;
+  }
+  return false;
+};
 
-const filterByGuests = ({offer}) => (guestsInput.value === 'any') ? offer : offer.guests === Number(guestsInput.value);
+
+const filterByGuests = ({offer}) => {
+  if (guestsInput.value === 'any' || offer.guests === Number(guestsInput.value)) {
+    return true;
+  }
+  return false;
+};
 
 const filterByFeatures = ({offer}) => {
   const filtersFeatures = [];
@@ -56,7 +68,8 @@ const filterByFeatures = ({offer}) => {
   return false;
 };
 
-const filterOffers = (offers) => offers.filter((offer) => (filterByLivingType(offer) &&
+const filterOffers = (offers) => offers.filter((offer) =>
+  (filterByLivingType(offer) &&
 filterByPrice(offer) &&
 filterByRooms(offer) &&
 filterByGuests(offer) &&

@@ -2,7 +2,7 @@ import { createAnnouncementCard } from './card-offer.js';
 import { mapFiltersForm, setMapFilters, filterOffers } from './filters.js';
 import { announcementForm } from './form-validation.js';
 import { getData, showError } from './api.js';
-import { debounce } from './debounce.js';
+import { throttle } from './throttle.js';
 
 
 const MAIN_PIN_SIZE = 52;
@@ -89,9 +89,9 @@ const renderMarkers = (offers) => {
 const loadMap = () => {
   map.on('load', () => {
     getData((offers) => {
-      setMapFilters(debounce(
-        () => renderMarkers(filterOffers(offers)),
-      ));
+      setMapFilters(throttle(
+        () => renderMarkers(filterOffers(offers)), 5000)
+      );
       renderMarkers(offers);
       toggleForms(false);
     }, () => showError('Не удалось получить данные. Попробуйте ещё раз'));

@@ -17,7 +17,7 @@ sliderElement.noUiSlider.on('update', () => {
 });
 
 
-const defaultSliderPrice = (minValue) => {
+const resetDefaultSliderPrice = (minValue) => {
   sliderElement.noUiSlider.updateOptions({
     start: minValue,
     connect: 'lower',
@@ -29,4 +29,4 @@ const defaultSliderPrice = (minValue) => {
   });
 };
 
-export {sliderElement, defaultSliderPrice};
+export {sliderElement, resetDefaultSliderPrice};
