@@ -4,11 +4,10 @@ import { announcementForm } from './form-validation.js';
 import { getData, showError } from './api.js';
 import { throttle } from './throttle.js';
 
-
 const MAIN_PIN_SIZE = 52;
 const AD_PIN_SIZE = 40;
 const BASIC_LAT = 35.68948;
-const BASIC_LNG = 139.69170;
+const BASIC_LNG = 139.6917;
 const BASIC_MAP_SCALING = 11.5;
 const DECIMAL_PLACE = 5;
 const OFFERS_COUNT = 10;
@@ -20,7 +19,9 @@ const toggleClass = (element, className, value) => {
 };
 
 const toggleFormElements = (formElements, value) => {
-  formElements.forEach((element) => {element.disabled = value;});
+  formElements.forEach((element) => {
+    element.disabled = value;
+  });
 };
 
 const toggleAdForm = (value) => {
@@ -30,7 +31,10 @@ const toggleAdForm = (value) => {
 
 const toggleFiltersForm = (value) => {
   toggleClass(mapFiltersForm, 'map__filters--disabled', value);
-  toggleFormElements(mapFiltersForm.querySelectorAll('select, .map__features'), value);
+  toggleFormElements(
+    mapFiltersForm.querySelectorAll('select, .map__features'),
+    value
+  );
 };
 
 const toggleForms = (value) => {
@@ -41,13 +45,13 @@ const toggleForms = (value) => {
 const mainPinMarker = L.icon({
   iconUrl: '../img/main-pin.svg',
   iconSize: [MAIN_PIN_SIZE, MAIN_PIN_SIZE],
-  iconAnchor: [MAIN_PIN_SIZE/2, MAIN_PIN_SIZE],
+  iconAnchor: [MAIN_PIN_SIZE / 2, MAIN_PIN_SIZE],
 });
 
 const adPin = L.icon({
   iconUrl: '../img/pin.svg',
   iconSize: [AD_PIN_SIZE, AD_PIN_SIZE],
-  iconAnchor: [AD_PIN_SIZE/2, AD_PIN_SIZE],
+  iconAnchor: [AD_PIN_SIZE / 2, AD_PIN_SIZE],
 });
 
 const marker = L.marker(
@@ -58,13 +62,13 @@ const marker = L.marker(
   {
     draggable: true,
     icon: mainPinMarker,
-  },
+  }
 );
 
 const markerGroup = L.layerGroup().addTo(map);
 
 const createMarker = (point) => {
-  const {location} = point;
+  const { location } = point;
   const adMarker = L.marker(
     {
       lat: location.lat,
@@ -72,11 +76,9 @@ const createMarker = (point) => {
     },
     {
       icon: adPin,
-    },
+    }
   );
-  adMarker
-    .addTo(markerGroup)
-    .bindPopup(createAnnouncementCard(point));
+  adMarker.addTo(markerGroup).bindPopup(createAnnouncementCard(point));
 };
 
 const renderMarkers = (offers) => {
@@ -87,32 +89,38 @@ const renderMarkers = (offers) => {
 };
 
 const loadMap = () => {
-  map.on('load', () => {
-    getData((offers) => {
-      setMapFilters(throttle(
-        () => renderMarkers(filterOffers(offers)), 5000)
+  map
+    .on('load', () => {
+      getData(
+        (offers) => {
+          setMapFilters(
+            throttle(() => renderMarkers(filterOffers(offers)), 5000)
+          );
+          renderMarkers(offers);
+          toggleForms(false);
+        },
+        () => showError('Не удалось получить данные. Попробуйте ещё раз')
       );
-      renderMarkers(offers);
-      toggleForms(false);
-    }, () => showError('Не удалось получить данные. Попробуйте ещё раз'));
-  })
-    .setView({
-      lat: BASIC_LAT,
-      lng: BASIC_LNG,
-    }, BASIC_MAP_SCALING);
+    })
+    .setView(
+      {
+        lat: BASIC_LAT,
+        lng: BASIC_LNG,
+      },
+      BASIC_MAP_SCALING
+    );
 };
 
-const resetMap = () => map.setView({
-  lat: BASIC_LAT,
-  lng: BASIC_LNG,
-});
+const resetMap = () =>
+  map.setView({
+    lat: BASIC_LAT,
+    lng: BASIC_LNG,
+  });
 
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  },
-).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
 
 const resetMarker = () => {
   marker.setLatLng({
@@ -127,7 +135,18 @@ adress.setAttribute('value', `${marker._latlng.lat}, ${marker._latlng.lng}`);
 
 marker.on('drag', (evt) => {
   const coordinates = evt.target.getLatLng();
-  adress.value = `${coordinates.lat.toFixed(DECIMAL_PLACE)}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
+  adress.value = `${coordinates.lat.toFixed(
+    DECIMAL_PLACE
+  )}, ${coordinates.lng.toFixed(DECIMAL_PLACE)}`;
 });
 
-export { loadMap, resetMap, announcementForm, resetMarker, markerGroup, renderMarkers, toggleForms, toggleFiltersForm };
+export {
+  loadMap,
+  resetMap,
+  announcementForm,
+  resetMarker,
+  markerGroup,
+  renderMarkers,
+  toggleForms,
+  toggleFiltersForm,
+};

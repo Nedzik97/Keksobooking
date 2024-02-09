@@ -115,7 +115,7 @@ const checksFormValidation = () => {
 };
 
 const setUserFromSubmit = (onSuccess, onFail) => {
-  announcementForm.addEventListener('submit', (evt) => {
+  announcementForm.addEventListener('click', (evt) => {
     evt.preventDefault();
     blockSubmitButton();
     sendData(

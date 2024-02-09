@@ -8,4 +8,3 @@ toggleForms(true);
 loadMap();
 
 setUserFromSubmit(showSuccessPopup, showErrorPopup);
-
