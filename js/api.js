@@ -1,6 +1,6 @@
 import { resetForm } from './form.js';
 
-const ERROR_SHOW_TIME = 5000;
+const ERROR_SHOW_TIME = 4000;
 const DATABASE_URL = 'https://25.javascript.htmlacademy.pro/keksobooking';
 const DATABSE_OFFERS_URL = `${DATABASE_URL}/data`;
 
